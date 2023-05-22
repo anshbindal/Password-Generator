@@ -8,13 +8,13 @@ const lowercaseCheck = document.querySelector("#lowercase");
 const numbersCheck = document.querySelector("#numbers");
 const symbolsCheck = document.querySelector("#symbols");
 const indicator = document.querySelector("[data-indicator]");
-const generateBtn = document.querySelector(".generateBtn");
-const allCheckBox = document.querySelector("input[type=checkbox]");
+const generateBtn = document.querySelector(".generateButton");
+const allCheckBox = document.querySelectorAll("input[type=checkbox]");
 const symbols = '~`!@#$%^&*()_-+={[}]|:;"<,>.?/';
 
 let password = "";
 let passwordLength = 10;
-let checkCount = 1;
+let checkCount = 0;
 handleSlider();
 
 // Set passwordLength using function
@@ -28,7 +28,7 @@ function setIndicator(color) {
 }
 
 function getRndInteger(min, max) {
-  Math.floor(Math.random() * (max - min)) + min;
+  return Math.floor(Math.random() * (max - min)) + min;
 }
 
 function generateRandomNumber() {
@@ -57,11 +57,11 @@ function calcStrength() {
   if (numbersCheck.checked) hasNumber = true;
   if (symbolsCheck.checked) hasSymbol = true;
 
-  if (hasUpper && hasLower && (hasNum || hasSym) && passwordLength >= 8) {
+  if (hasUpper && hasLower && (hasNumber || hasSymbol) && passwordLength >= 8) {
     setIndicator("#0f0");
   } else if (
     (hasLower || hasUpper) &&
-    (hasNum || hasSym) &&
+    (hasNumber || hasSymbol) &&
     passwordLength >= 6
   ) {
     setIndicator("#ff0");
@@ -70,4 +70,89 @@ function calcStrength() {
   }
 }
 
-console.log(symbols.charAt[4]);
+async function copyContent() {
+  try {
+    await navigator.clipboard.writeText(passwordDisplay.value);
+    copyMsg.innerText = "Copied";
+  } catch (error) {
+    copyMsg.innerText = "Failed";
+  }
+  copyMsg.classList.add("active");
+
+  setTimeout(() => {
+    copyMsg.classList.remove("active");
+  }, 2000);
+}
+
+function shufflePassword(array) {
+  // Fisher Yates Method
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    const temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
+  let str = "";
+  array.forEach((el) => (str += el));
+  return str;
+}
+
+function handleCheckBoxChange() {
+  checkCount = 0;
+  allCheckBox.forEach((item) => {
+    if (item.checked) {
+      checkCount++;
+    }
+  });
+}
+
+allCheckBox.forEach((checkbox) => {
+  checkbox.addEventListener("change", handleCheckBoxChange);
+});
+
+inputSlider.addEventListener("input", (e) => {
+  passwordLength = e.target.value;
+  handleSlider();
+});
+
+copyBtn.addEventListener("click", () => {
+  if (passwordDisplay.value) {
+    copyContent();
+  }
+});
+
+generateBtn.addEventListener("click", () => {
+  if (checkCount == 0) return;
+
+  // New Password Steps
+
+  if (passwordLength < checkCount) {
+    passwordLength = checkCount;
+    handleSlider();
+  }
+  password = "";
+  let funcArr = [];
+  if (uppercaseCheck.checked) funcArr.push(generateUpperCase);
+
+  if (lowercaseCheck.checked) funcArr.push(generateLowerCase);
+
+  if (numbersCheck.checked) funcArr.push(generateRandomNumber);
+
+  if (symbolsCheck.checked) funcArr.push(generateSymbol);
+
+  for (let i = 0; i < funcArr.length; i++) {
+    password += funcArr[i]();
+  }
+
+  for (let i = 0; i < passwordLength - funcArr.length; i++) {
+    let randIndex = getRndInteger(0, funcArr.length);
+
+    password += funcArr[randIndex]();
+  }
+
+  password = shufflePassword(Array.from(password));
+
+  passwordDisplay.value = password;
+
+  calcStrength();
+});

@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="style.css" />
     <title>Password Generator</title>
   </head>
   <body>
@@ -17,8 +18,8 @@
           class="display"
           data-passwordDisplay
         />
-        <button data-copy>
-          <span data-copyMsg></span>
+        <button class="copyBtn" data-copy>
+          <span class="tooltip" data-copyMsg></span>
           <img src="./assets/copy.svg" alt="copy" height="23" width="23" />
         </button>
       </div>
@@ -32,26 +33,26 @@
         <input type="range" min="1" max="20" class="slider" data-lengthSlider />
       </div>
       <!-- Checkboxes -->
-      <div>
+      <div class="check">
         <input type="checkbox" id="uppercase" />
         <label for="uppercase">Includes Uppercase Letters</label>
       </div>
-      <div>
+      <div class="check">
         <input type="checkbox" id="lowercase" />
         <label for="lowercase">Includes Lowercase Letters</label>
       </div>
-      <div>
+      <div class="check">
         <input type="checkbox" id="numbers" />
         <label for="numbers">Includes Numbers</label>
       </div>
-      <div>
+      <div class="check">
         <input type="checkbox" id="symbols" />
         <label for="symbols">Includes Symbols</label>
       </div>
       <!-- Strength Section -->
       <div class="strength-container">
         <p>Strength</p>
-        <div data-indicator></div>
+        <div class="indicator" data-indicator></div>
       </div>
       <!-- Generate Password -->
       <button class="generateButton">Generate Password</button>

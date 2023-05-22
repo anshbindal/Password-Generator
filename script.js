@@ -16,7 +16,7 @@ let password = "";
 let passwordLength = 10;
 let checkCount = 0;
 handleSlider();
-
+setIndicator("#ccc");
 // Set passwordLength using function
 function handleSlider() {
   inputSlider.value = passwordLength;
@@ -25,6 +25,7 @@ function handleSlider() {
 
 function setIndicator(color) {
   indicator.style.backgroundColor = color;
+  indicator.style.boxShadow = `0ppx 0px 12px 1px ${color}`;
 }
 
 function getRndInteger(min, max) {
@@ -44,7 +45,7 @@ function generateUpperCase() {
 
 function generateSymbol() {
   const randNum = getRndInteger(0, symbols.length);
-  return symbols.charAt[randNum];
+  return symbols[randNum];
 }
 
 function calcStrength() {
